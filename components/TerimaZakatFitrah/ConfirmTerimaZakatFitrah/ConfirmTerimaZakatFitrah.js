@@ -43,15 +43,14 @@ const ConfirmTerimaZakatFitrah = ({ route, navigation }) => {
         }
     }, [user])
     const onSubmit = async (data) => {
-        console.log('inidata', data)
         dispatch(UpdateZakatFitrahReceived({ id_peserta: data.id, data: data })).then(() => {
             setTimeout(() => {
                 navigation.goBack()
-            }, 3000);
+            }, 2000);
         }).catch(() => {
             setTimeout(() => {
                 navigation.goBack()
-            }, 3000);
+            }, 2000);
         })
 
 
@@ -148,9 +147,9 @@ const ConfirmTerimaZakatFitrah = ({ route, navigation }) => {
                             render={({ field: { onChange, onBlur, value } }) => (
                                 <RadioButton.Group onValueChange={onChange} value={value}>
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }} >
-                                        <RadioButton value={true} />
+                                        <RadioButton value={"1"} />
                                         <Text style={{ color: '#a8dbcc' }}>Sudah</Text>
-                                        <RadioButton value={false} />
+                                        <RadioButton value={"0"} />
                                         <Text style={{ color: '#a8dbcc' }}>Belum</Text>
                                     </View>
                                 </RadioButton.Group>

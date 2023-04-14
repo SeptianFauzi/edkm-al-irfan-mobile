@@ -54,11 +54,11 @@ const ConfirmBeriQurban = ({ route, navigation }) => {
         dispatch(UpdateQurbanSent({ id_peserta: dataPostQurban.id, data: dataPostQurban })).then(() => {
             setTimeout(() => {
                 navigation.goBack()
-            }, 3000);
+            }, 2000);
         }).catch(() => {
             setTimeout(() => {
                 navigation.goBack()
-            }, 3000);
+            }, 2000);
         })
 
 

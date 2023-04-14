@@ -16,7 +16,7 @@ const LoginScreen = ({ navigation }) => {
     const [disabled, setdisabled] = useState(false)
     const [errorMessage, setErrorMessage] = useState(false)
     const [dataPostLogin, setdataPostLogin] = useState({
-        email: '',
+        emailusername: '',
         password: ''
     })
     const onSubmit = async (data) => {
@@ -36,7 +36,7 @@ const LoginScreen = ({ navigation }) => {
                     setvisible(true)
                     setdisabled(false)
                     setloading(false)
-                    setErrorMessage('Email/ Password Salah')
+                    setErrorMessage('Email/Username Password Salah')
                 }
 
             })
@@ -56,14 +56,14 @@ const LoginScreen = ({ navigation }) => {
             }
         }
         setdataPostLogin({
-            email: 'sample',
+            emailusername: 'sample',
             password: 'sample'
         })
         checkUser()
     }, [])
 
     const schema = yup.object().shape({
-        email: yup.string().email().required(),
+        emailusername: yup.string().required(),
         password: yup.string().required('Password Wajib Di Isi')
     });
     const { control, handleSubmit, formState: { errors }, reset } = useForm({
@@ -84,7 +84,7 @@ const LoginScreen = ({ navigation }) => {
                             control={control}
                             render={({ field: { onChange, onBlur, value } }) => (
                                 <TextInput style={{ width: '100%' }}
-                                    label="Email"
+                                    label="Email/Username"
                                     onChangeText={value => onChange(value)}
                                     mode="outlined"
                                     onBlur={onBlur}
@@ -92,8 +92,8 @@ const LoginScreen = ({ navigation }) => {
                                     disabled={disabled}
                                 />
                             )}
-                            name="email" />
-                        {errors.email?.message ? <Caption>{errors.email?.message}</Caption> : <View></View>}
+                            name="emailusername" />
+                        {errors.emailusername?.message ? <Caption>{errors.emailusername?.message}</Caption> : <View></View>}
                         <Controller
                             control={control}
                             render={({ field: { onChange, onBlur, value } }) => (

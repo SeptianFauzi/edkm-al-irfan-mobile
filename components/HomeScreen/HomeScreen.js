@@ -21,7 +21,6 @@ const HomeScreen = ({ navigation }) => {
     }, []);
     return (
         <View style={styles.container}>
-            {/* <View style={styles.container}> */}
             <View
                 style={{
                     marginVertical: '10%',
@@ -96,7 +95,6 @@ const HomeScreen = ({ navigation }) => {
                     </Card.Content>
                 </Card>
             </TouchableOpacity>
-            {/* </View> */}
         </View>
     );
 };

@@ -104,7 +104,6 @@ const SisaZakatFitrahReceived = ({ route, navigation, year_hijriah }) => {
     } else if (state.zakatFitrahSisaReceived.length > 0) {
         return (
             <View style={styles.container}>
-                {/* <View style={styles.sub_container}> */}
                 <Title style={{ marginVertical: 5 }}>Daftar Sisa Peserta</Title>
                 <Subheading>
                     Tersisa : {state.zakatFitrahSisaReceived.length}
@@ -119,11 +118,10 @@ const SisaZakatFitrahReceived = ({ route, navigation, year_hijriah }) => {
                 />
                 <FlatList
                     data={state.zakatFitrahSisaReceived}
-                    style={{ width: '90%', maxHeight: '80%' }}
+                    style={{ width: '90%', maxHeight: '100%' }}
                     renderItem={renderItem}
                     keyExtractor={(item, index) => item.id.toString()}
                 />
-                {/* </View> */}
             </View>
         );
     } else if (state.zakatFitrahSisaReceived.length <= 0) {
