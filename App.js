@@ -1,34 +1,30 @@
-import React from 'react';
+import React from "react";
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './components/HomeScreen/HomeScreen';
-import {
-  Button,
-  DefaultTheme,
-  Provider as PaperProvider,
-} from 'react-native-paper';
-import QrCodeKumpulZakatFitrah from './components/QrCodeKumpulZakatFitrah/QrCodeKumpulZakatFitrah';
-import SampleScreen from './components/SampleScreen/SampleScreen';
-import LoginScreen from './components/LoginScreen/LoginScreen';
-import TerimaCelengan from './components/TerimaCelengan/TerimaCelengan';
-import ConfirmTerimaCelengan from './components/ConfirmTerimaCelengan/ConfirmTerimaCelengan';
-import BeriCelengan from './components/BeriCelengan/BeriCelengan';
-import ConfirmBeriCelengan from './components/ConfirmBeriCelengan/ConfirmBeriCelengan';
-import MenuBeriCelengan from './components/MenuBeriCelengan/MenuBeriCelengan';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import MenuTerimaCelengan from './components/MenuTerimaCelengan/MenuTerimaCelengan';
-import { Provider as StoreProvider } from 'react-redux';
-import store from './config/redux/store';
-import BeriQurban from './components/QurbanSent/BeriQurban/BeriQurban';
-import MenuBeriQurban from './components/QurbanSent/MenuBeriQurban/MenuBeriQurban';
-import ConfirmBeriQurban from './components/QurbanSent/ConfirmBeriQurban/ConfirmBeriQurban';
-import TerimaZakatFitrah from './components/TerimaZakatFitrah/TerimaZakatFitrah/TerimaZakatFitrah';
-import MenuTerimaZakatFitrah from './components/TerimaZakatFitrah/MenuTerimaZakatFitrah/MenuTerimaZakatFitrah';
-import ConfirmTerimaZakatFitrah from './components/TerimaZakatFitrah/ConfirmTerimaZakatFitrah/ConfirmTerimaZakatFitrah';
-import MenuBeriZakatFitrah from './components/BeriZakatFitrah/MenuBeriZakatFitrah/MenuBeriZakatFitrah';
-import ConfirmBeriZakatFitrah from './components/BeriZakatFitrah/ConfirmBeriZakatFitrah/ConfirmBeriZakatFitrah';
-import BeriZakatFitrah from './components/BeriZakatFitrah/BeriZakatFitrah/BeriZakatFitrah';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreen from "./components/HomeScreen/HomeScreen";
+import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+import QrCodeKumpulZakatFitrah from "./components/QrCodeKumpulZakatFitrah/QrCodeKumpulZakatFitrah";
+import SampleScreen from "./components/SampleScreen/SampleScreen";
+import LoginScreen from "./components/LoginScreen/LoginScreen";
+import TerimaCelengan from "./components/TerimaCelengan/TerimaCelengan";
+import ConfirmTerimaCelengan from "./components/ConfirmTerimaCelengan/ConfirmTerimaCelengan";
+import BeriCelengan from "./components/BeriCelengan/BeriCelengan";
+import ConfirmBeriCelengan from "./components/ConfirmBeriCelengan/ConfirmBeriCelengan";
+import MenuBeriCelengan from "./components/MenuBeriCelengan/MenuBeriCelengan";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import MenuTerimaCelengan from "./components/MenuTerimaCelengan/MenuTerimaCelengan";
+import { Provider as StoreProvider } from "react-redux";
+import store from "./config/redux/store";
+import BeriQurban from "./components/QurbanSent/BeriQurban/BeriQurban";
+import MenuBeriQurban from "./components/QurbanSent/MenuBeriQurban/MenuBeriQurban";
+import ConfirmBeriQurban from "./components/QurbanSent/ConfirmBeriQurban/ConfirmBeriQurban";
+import TerimaZakatFitrah from "./components/TerimaZakatFitrah/TerimaZakatFitrah/TerimaZakatFitrah";
+import MenuTerimaZakatFitrah from "./components/TerimaZakatFitrah/MenuTerimaZakatFitrah/MenuTerimaZakatFitrah";
+import ConfirmTerimaZakatFitrah from "./components/TerimaZakatFitrah/ConfirmTerimaZakatFitrah/ConfirmTerimaZakatFitrah";
+import MenuBeriZakatFitrah from "./components/BeriZakatFitrah/MenuBeriZakatFitrah/MenuBeriZakatFitrah";
+import ConfirmBeriZakatFitrah from "./components/BeriZakatFitrah/ConfirmBeriZakatFitrah/ConfirmBeriZakatFitrah";
+import BeriZakatFitrah from "./components/BeriZakatFitrah/BeriZakatFitrah/BeriZakatFitrah";
 const Stack = createStackNavigator();
 export default function App() {
   const theme = {
@@ -36,11 +32,11 @@ export default function App() {
     roundness: 8,
     colors: {
       ...DefaultTheme.colors,
-      primary: '#a8dbcc',
-      accent: '#c0d6de',
-      placeholder: '#a8dbcc',
-      text: '#56bdbe',
-      background: '#f6f6f6',
+      primary: "#a8dbcc",
+      accent: "#c0d6de",
+      placeholder: "#a8dbcc",
+      text: "#56bdbe",
+      background: "#f6f6f6",
     },
   };
   return (
