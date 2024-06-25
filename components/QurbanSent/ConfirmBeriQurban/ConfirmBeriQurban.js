@@ -3,28 +3,23 @@ import { View, Text, StyleSheet, ActivityIndicator, Image } from "react-native";
 
 import axios from "axios";
 import {
-  Avatar,
   Button,
   Caption,
   Card,
   Divider,
-  Snackbar,
   TextInput,
   Title,
 } from "react-native-paper";
-import moment from "moment-hijri";
-
-import { URL_API } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import Success from "../../Success/Success";
 import Rejected from "../../Rejected/Rejected";
 import { RadioButton } from "react-native-paper";
 import {
   GetDetailQurbanSent,
+  GetStatusSelesaiQurbanSent,
+  GetStatusSisaQurbanSent,
   UpdateQurbanSent,
 } from "../../../config/redux/services";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +27,6 @@ const ConfirmBeriQurban = ({ route, navigation }) => {
   const { id_peserta, year_hijriah } = route.params;
   const dispatch = useDispatch();
   const state = useSelector((state) => state.qurbanSent);
-
   const [update, setupdate] = useState(false);
   const [user, setuser] = useState({
     user: false,
@@ -54,7 +48,6 @@ const ConfirmBeriQurban = ({ route, navigation }) => {
     control,
     handleSubmit,
     formState: { errors },
-    reset,
     setValue,
   } = useForm({
     reValidateMode: "onChange",
@@ -73,6 +66,18 @@ const ConfirmBeriQurban = ({ route, navigation }) => {
     )
       .then(() => {
         setTimeout(() => {
+          dispatch(
+            GetStatusSisaQurbanSent({
+              year_hijriah,
+              location: "Semua",
+            })
+          );
+          dispatch(
+            GetStatusSelesaiQurbanSent({
+              year_hijriah,
+              location: "Semua",
+            })
+          );
           navigation.goBack();
         }, 500);
       })
@@ -234,9 +239,9 @@ const ConfirmBeriQurban = ({ route, navigation }) => {
                       alignItems: "center",
                     }}
                   >
-                    <RadioButton value="true" />
+                    <RadioButton value="1" />
                     <Text style={{ color: "#a8dbcc" }}>Sudah</Text>
-                    <RadioButton value="false" />
+                    <RadioButton value="0" />
                     <Text style={{ color: "#a8dbcc" }}>Belum</Text>
                   </View>
                 </RadioButton.Group>

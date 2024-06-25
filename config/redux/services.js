@@ -97,7 +97,6 @@ export const GetDetailCelenganReceived = createAsyncThunk(
 export const UpdateCelenganReceived = createAsyncThunk(
   "celengan/updateCelenganReceived",
   async ({ id_peserta, data }) => {
-    console.log(data);
     const token = await AsyncStorage.getItem("token");
     const response = await axios.put("/api/celengan/" + id_peserta, data, {
       headers: { "X-APITOKEN": token },
@@ -211,7 +210,6 @@ export const GetDetailZakatFitrahReceived = createAsyncThunk(
 export const UpdateZakatFitrahReceived = createAsyncThunk(
   "zakatfitrah/updateZakatFitrahReceived",
   async ({ id_peserta, data }) => {
-    console.log(data);
     const token = await AsyncStorage.getItem("token");
     const response = await axios.put(
       "/api/zakatfitrahreceived/" + id_peserta,

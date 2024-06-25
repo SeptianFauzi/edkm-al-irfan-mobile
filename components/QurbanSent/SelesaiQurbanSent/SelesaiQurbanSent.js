@@ -1,88 +1,32 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  RefreshControl,
-  Image,
-} from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, Image } from "react-native";
 
-import axios from "axios";
 import {
-  Avatar,
   Button,
-  Caption,
   Card,
-  Divider,
   FAB,
-  List,
   Menu,
   Paragraph,
-  Snackbar,
   Subheading,
   TextInput,
   Title,
 } from "react-native-paper";
-import moment from "moment-hijri";
-
-import { URL_API } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import Success from "../../Success/Success";
-import Rejected from "../../Rejected/Rejected";
-import { RadioButton } from "react-native-paper";
 import { FlatList } from "react-native-gesture-handler";
 import { GetStatusSelesaiQurbanSent } from "../../../config/redux/services";
 import { useDispatch, useSelector } from "react-redux";
 const SelesaiQurbanSent = ({ route, navigation, year_hijriah }) => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.qurbanSent);
-  // const [refresh, setrefresh] = useState(false)
-  // const [loading, setloading] = useState(false)
-  // const [PesertaQurban, setPesertaQurban] = useState(false)
   const [user, setuser] = useState({
     user: "",
     token: "",
   });
-  // const [checkData, setcheckData] = useState(true)
-  // const [success, setsuccess] = useState(false)
-  // const [failed, setfailed] = useState()
-  // // const [sample, setsample] = useState(false)
-  // const getDetailPesertaQurban = async () => {
-  //     const laading = await setloading(true)
-  //     const awaitGetStatusQurban = await axios.get('/api/statuspesertaqurbanmoneyboxsent?is_money_box_sent=true&year_hijriah=' + year_hijriah, {
-  //         headers: {
-  //             'api_token': user.token
-  //         }
-  //     })
-  //         .then(function (response) {
-
-  //             if (response.data.data.length > 0) {
-  //                 setrefresh(true)
-  //                 setrefresh(false)
-  //                 setPesertaQurban(response.data.data)
-  //                 setloading(false)
-  //                 setcheckData(true)
-  //             } else {
-  //                 setrefresh(false)
-  //                 setPesertaQurban(false)
-  //                 setcheckData(false)
-  //             }
-  //         })
-
-  //         .catch(function (error) {
-  //             setloading(false)
-  //             // console.logerror)
-  //         })
-  //     const loading = await setloading(false)
-  // }
 
   const [location, setlocation] = useState("Semua");
   const [visible, setvisible] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const openMenu = () => {
     setvisible(true);
@@ -107,8 +51,27 @@ const SelesaiQurbanSent = ({ route, navigation, year_hijriah }) => {
       dispatch(GetStatusSelesaiQurbanSent({ year_hijriah, location }));
     }
   }, [user, location]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      setSearchText("");
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [navigation]);
+
   const renderItem = ({ item, index }) => (
-    <Card style={{ backgroundColor: "#a8dbcc", marginTop: 10 }}>
+    <Card
+      style={{ backgroundColor: "#a8dbcc", marginTop: 10 }}
+      onPress={() => {
+        navigation.navigate("ConfirmBeriQurban", {
+          id_peserta: item.id_peserta,
+          year_hijriah: year_hijriah,
+        });
+      }}
+    >
       <Card.Content>
         <View
           style={{
@@ -160,89 +123,60 @@ const SelesaiQurbanSent = ({ route, navigation, year_hijriah }) => {
         <Text>Silahkan ulangi kembali</Text>
       </View>
     );
-  } else if (state.qurbanSelesaiSent) {
+  } else if (state.qurbanSelesaiSent.length > 0) {
     return (
       <View style={styles.container}>
-        {/* <View style={styles.sub_container}> */}
-        <Title style={{ marginVertical: 10 }}>
+        <Title style={{ marginVertical: 5 }}>
           Daftar Peserta Yang Telah Dibagkan
         </Title>
         <Subheading>Terkirim : {state.qurbanSelesaiSent.length}</Subheading>
-
-        <FlatList
-          data={state.qurbanSelesaiSent}
-          style={{ width: "90%", maxHeight: "75%", marginBottom: "2%" }}
-          // refreshControl={<RefreshControl
-          //     onRefresh={() => {
-          //         getDetailPesertaQurban()
-          //     }}
-          //     refreshing={refresh} />}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => item.id.toString()}
-        ></FlatList>
         <View
           style={{
             flexDirection: "row",
-            width: "80%",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "space-between",
+            marginEnd: 10,
           }}
         >
-          <Menu
-            style={{ marginHorizontal: "2%" }}
+          <TextInput
             mode="outlined"
-            visible={visible}
-            onDismiss={closeMenu}
-            anchor={
-              <Button icon="filter" mode="outlined" onPress={openMenu}>
-                {location}
-              </Button>
-            }
-          >
-            <Menu.Item
-              onPress={() => {
-                setvisible(false);
-                setlocation("Batas");
-              }}
-              title="Batas"
-            />
-            <Menu.Item
-              onPress={() => {
-                setvisible(false);
-                setlocation("Tonggoh");
-              }}
-              title="Tonggoh"
-            />
-            <Menu.Item
-              onPress={() => {
-                setvisible(false);
-                setlocation("Semua");
-              }}
-              title="Semua"
-            />
-          </Menu>
-          <Button
-            style={{ marginHorizontal: "2%" }}
+            style={{
+              marginVertical: 10,
+              width: "70%",
+              borderRadius: 10,
+              marginEnd: 10,
+            }}
+            value={searchText}
+            placeholder="Cari Peserta"
+            onChangeText={(value) => setSearchText(value)}
+          />
+          <FAB
+            style={styles.fab}
+            small
             icon="refresh"
             onPress={() =>
-              dispatch(
-                GetStatusSelesaiQurbanSent({
-                  year_hijriah: year_hijriah,
-                  location: location,
-                })
-              )
+              dispatch(GetStatusSelesaiQurbanSent({ year_hijriah, location }))
             }
-            loading={state.loadingData}
-            disabled={state.loadingData}
-            mode="outlined"
-          >
-            Reload
-          </Button>
+          />
         </View>
-        {/* </View> */}
+        <FlatList
+          data={state.qurbanSelesaiSent.filter((value) => {
+            return (
+              value.id_peserta
+                .toLowerCase()
+                .includes(searchText.toLowerCase()) ||
+              value.id_peserta_peserta.name
+                .toLowerCase()
+                .includes(searchText.toLowerCase())
+            );
+          })}
+          style={{ width: "90%" }}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => item.id.toString()}
+        ></FlatList>
       </View>
     );
-  } else if (!state.qurbanSelesaiSent) {
+  } else if (state.qurbanSelesaiSent.length <= 0) {
     return (
       <View style={styles.container}>
         <View style={styles.sub_container}>
@@ -341,13 +275,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#a8dbcc",
   },
   fab: {
-    position: "absolute",
+    position: "relative",
     flexDirection: "row",
-    width: "80%",
-    bottom: 10,
     backgroundColor: "#a8dbcc",
     justifyContent: "center",
     alignItems: "flex-start",
+    color: "white",
   },
 });
 

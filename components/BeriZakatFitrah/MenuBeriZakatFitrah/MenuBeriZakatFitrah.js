@@ -7,7 +7,6 @@ import SelesaiZakatFitrahSent from "../SelesaiZakatFitrahSent/SelesaiZakatFitrah
 const Tab = createMaterialTopTabNavigator();
 
 const MenuBeriZakatFitrah = ({ route, navigation }) => {
-  const insets = useSafeAreaInsets();
   const { year_hijriah } = route.params;
   return (
     <Tab.Navigator initialRouteName="Peserta">

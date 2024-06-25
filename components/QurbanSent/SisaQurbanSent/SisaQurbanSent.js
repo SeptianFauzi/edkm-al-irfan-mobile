@@ -1,47 +1,23 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  RefreshControl,
-  Image,
-} from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, Image } from "react-native";
 
-import axios from "axios";
 import {
-  Avatar,
-  Button,
-  Caption,
   Card,
-  Divider,
   FAB,
-  List,
-  Menu,
   Paragraph,
-  Snackbar,
   Subheading,
   TextInput,
   Title,
 } from "react-native-paper";
-import moment from "moment-hijri";
-
-import { URL_API } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import Success from "../../Success/Success";
-import Rejected from "../../Rejected/Rejected";
-import { RadioButton } from "react-native-paper";
 import { FlatList } from "react-native-gesture-handler";
 import { GetStatusSisaQurbanSent } from "../../../config/redux/services";
 import { useDispatch, useSelector } from "react-redux";
 const SisaQurbanSent = ({ route, navigation, year_hijriah }) => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.qurbanSent);
-
+  const [searchText, setSearchText] = useState("");
   const [user, setuser] = useState({
     user: "",
     token: "",
@@ -77,8 +53,27 @@ const SisaQurbanSent = ({ route, navigation, year_hijriah }) => {
       );
     }
   }, [user, location]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      setSearchText("");
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [navigation]);
+
   const renderItem = ({ item, index }) => (
-    <Card style={{ backgroundColor: "red", marginTop: 10 }}>
+    <Card
+      style={{ backgroundColor: "red", marginTop: 10 }}
+      onPress={() => {
+        navigation.navigate("ConfirmBeriQurban", {
+          id_peserta: item.id_peserta,
+          year_hijriah: year_hijriah,
+        });
+      }}
+    >
       <Card.Content>
         <View
           style={{
@@ -100,7 +95,7 @@ const SisaQurbanSent = ({ route, navigation, year_hijriah }) => {
       </Card.Content>
     </Card>
   );
-  if (state.loadingSisaSent || !state.qurbanSelesaiSent) {
+  if (state.loadingSisaSent || !state.qurbanSisaSent) {
     return (
       <View
         style={{
@@ -133,59 +128,31 @@ const SisaQurbanSent = ({ route, navigation, year_hijriah }) => {
   } else if (state.qurbanSisaSent.length > 0) {
     return (
       <View style={styles.container}>
-        {/* <View style={styles.sub_container}> */}
         <Title style={{ marginVertical: 5 }}>Daftar Sisa Peserta</Title>
         <Subheading>Tersisa : {state.qurbanSisaSent.length}</Subheading>
-
-        <FlatList
-          data={state.qurbanSisaSent}
-          style={{ width: "90%", maxHeight: "80%", marginBottom: "2%" }}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => item.id.toString()}
-        ></FlatList>
         <View
           style={{
             flexDirection: "row",
-            width: "80%",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "space-between",
+            marginEnd: 10,
           }}
         >
-          <Menu
-            style={{ marginHorizontal: "2%" }}
+          <TextInput
             mode="outlined"
-            visible={visible}
-            onDismiss={closeMenu}
-            anchor={
-              <Button icon="filter" mode="outlined" onPress={openMenu}>
-                {location}
-              </Button>
-            }
-          >
-            <Menu.Item
-              onPress={() => {
-                setvisible(false);
-                setlocation("Batas");
-              }}
-              title="Batas"
-            />
-            <Menu.Item
-              onPress={() => {
-                setvisible(false);
-                setlocation("Tonggoh");
-              }}
-              title="Tonggoh"
-            />
-            <Menu.Item
-              onPress={() => {
-                setvisible(false);
-                setlocation("Semua");
-              }}
-              title="Semua"
-            />
-          </Menu>
-          <Button
-            style={{ marginHorizontal: "2%" }}
+            style={{
+              marginVertical: 10,
+              width: "70%",
+              borderRadius: 10,
+              marginEnd: 10,
+            }}
+            value={searchText}
+            placeholder="Cari Peserta"
+            onChangeText={(value) => setSearchText(value)}
+          />
+          <FAB
+            style={styles.fab}
+            small
             icon="refresh"
             onPress={() =>
               dispatch(
@@ -195,13 +162,23 @@ const SisaQurbanSent = ({ route, navigation, year_hijriah }) => {
                 })
               )
             }
-            loading={state.loadingData}
-            disabled={state.loadingData}
-            mode="outlined"
-          >
-            Reload
-          </Button>
+          />
         </View>
+        <FlatList
+          data={state.qurbanSisaSent.filter((value) => {
+            return (
+              value.id_peserta
+                .toLowerCase()
+                .includes(searchText.toLowerCase()) ||
+              value.id_peserta_peserta.name
+                .toLowerCase()
+                .includes(searchText.toLowerCase())
+            );
+          })}
+          style={{ width: "90%" }}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => item.id.toString()}
+        ></FlatList>
       </View>
     );
   } else if (state.qurbanSisaSent.length <= 0) {
@@ -216,65 +193,19 @@ const SisaQurbanSent = ({ route, navigation, year_hijriah }) => {
             source={require("../../../assets/datanotfound.jpg")}
             style={{ width: 200, height: 200, marginVertical: 20 }}
           ></Image>
-          <View
-            style={{
-              flexDirection: "row",
-              width: "80%",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Menu
-              style={{ marginHorizontal: "2%" }}
-              mode="outlined"
-              visible={visible}
-              onDismiss={closeMenu}
-              anchor={
-                <Button icon="filter" mode="outlined" onPress={openMenu}>
-                  {location}
-                </Button>
-              }
-            >
-              <Menu.Item
-                onPress={() => {
-                  setvisible(false);
-                  setlocation("Batas");
-                }}
-                title="Batas"
-              />
-              <Menu.Item
-                onPress={() => {
-                  setvisible(false);
-                  setlocation("Tonggoh");
-                }}
-                title="Tonggoh"
-              />
-              <Menu.Item
-                onPress={() => {
-                  setvisible(false);
-                  setlocation("Semua");
-                }}
-                title="Semua"
-              />
-            </Menu>
-            <Button
-              style={{ marginHorizontal: "2%" }}
-              icon="refresh"
-              onPress={() =>
-                dispatch(
-                  GetStatusSisaQurbanSent({
-                    year_hijriah: year_hijriah,
-                    location: location,
-                  })
-                )
-              }
-              loading={state.loadingData}
-              disabled={state.loadingData}
-              mode="outlined"
-            >
-              Reload
-            </Button>
-          </View>
+          <FAB
+            style={styles.fab}
+            small
+            icon="refresh"
+            onPress={() =>
+              dispatch(
+                GetStatusSisaQurbanSent({
+                  year_hijriah: year_hijriah,
+                  location: location,
+                })
+              )
+            }
+          />
         </View>
       </View>
     );
@@ -303,13 +234,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#a8dbcc",
   },
   fab: {
-    position: "absolute",
+    position: "relative",
     flexDirection: "row",
-    width: "80%",
-    bottom: 10,
     backgroundColor: "#a8dbcc",
     justifyContent: "center",
     alignItems: "flex-start",
+    color: "white",
   },
 });
 
